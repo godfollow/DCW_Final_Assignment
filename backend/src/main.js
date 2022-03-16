@@ -23,6 +23,10 @@ const authenticated = async (req, res, next) => {
 
 app.use(cors())
 
+app.get('/api/info', authenticated, (req, res) => {
+    res.send({ok: 1, username: req.username})
+})
+
 app.post('/api/login', bodyParser.json(), async (req, res) => {
     let token = req.body.token
     let result = await axios.get('https://graph.facebook.com/me', {

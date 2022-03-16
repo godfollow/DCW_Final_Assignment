@@ -11,6 +11,9 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import FacebookLogin from 'react-facebook-login';
+import axios from 'axios';
+
 
 
 const pages = ['Products', 'Pricing', 'Blog'];
@@ -36,6 +39,32 @@ const ResponsiveAppBar = () => {
         setAnchorElUser(null);
     };
 
+    axios.interceptors.request.use(function(config){
+        const token = sessionStorage.getItem('access_token')
+        if(token)
+          config.headers['Authorization'] = `Bearer ${token}`
+        return config
+      }, function(err){
+        return Promise.reject(err)
+      })
+    
+      const callInfoAPI = async () => {
+        let result = await axios.get('http://localhost:8080/api/info')
+        console.log(result.data)
+      }
+       
+    const responseFacebook = async (response) => {
+        if(response.accessToken){
+          console.log('log in with accessToken=' + response.accessToken);
+          let result = await axios.post('http://localhost:8080/api/login', {
+            token: response.accessToken
+          })
+          console.log(result.data)
+          sessionStorage.setItem('acess_token', result.data.access_token)
+        }
+        
+      }
+      
     return (
         <AppBar position="static">
             <Container maxWidth="xl">
@@ -138,7 +167,14 @@ const ResponsiveAppBar = () => {
                             </>
                             :
                             <>
-                                <Button variant="contained">Login</Button>
+                                <FacebookLogin
+                                    appId="468718444941464"
+                                    autoLoad={true}
+                                    fields="name,email,picture"
+                                    callback={responseFacebook} 
+                                />
+
+                                <Button onClick={callInfoAPI} variant="contained">Get info</Button>
                             </>
 
                         }
