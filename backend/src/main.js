@@ -23,27 +23,12 @@ const authenticated = async (req, res, next) => {
 
 app.use(cors())
 
-app.get('/api/info', authenticated, (req, res) => {
+app.get('/api/info_google', authenticated, (req, res) => {
     res.send({ok: 1, username: req.username})
 })
 
-app.post('/api/login', bodyParser.json(), async (req, res) => {
-    let token = req.body.token
-    let result = await axios.get('https://graph.facebook.com/me', {
-        params: {
-            fields: 'id,name,email',
-            access_token: token
-        }
-    })
-    if(!result.data.id){
-        res.sendStatus(403)
-        return
-    }
-    let data = {
-        username: result.data.email
-    }
-    let access_token = jwt.sign(data, TOKEN_RECRET, {expiresIn: '1800s'})
-    res.send({access_token, username: data.username})
+app.post('/api/login_with_goole', bodyParser.json(), async (req, res) => {
+    
 })
 
 app.listen(port, () => {
