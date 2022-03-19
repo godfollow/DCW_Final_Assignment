@@ -53,19 +53,18 @@ const ResponsiveAppBar = () => {
         console.log(result.data)
     }
 
-    const responseGoogle = (response) => {
-        console.log(response)
-        // if(response.access_token) {
-        //     console.log('login with access_token' + response.accessToken);
+    const responseGoogle = async (response) => {
+        if(response.accessToken) {
+            console.log('login with access_token' + response.accessToken);
 
-        //     let result = await axios.post('http://localhost:8080/api/login', {
-        //       token: response.accessToken
-        //     })
+            let result = await axios.post('http://localhost:8080/api/login', {
+              token: response.accessToken
+            })
 
-        //     console.log(result.data);
-        //     sessionStorage.setItem('access_token', result.data.accessToken)
+            console.log(result.data);
+            sessionStorage.setItem('access_token', result.data.accessToken)
 
-        //   }
+          }
 
 
     }
@@ -181,7 +180,7 @@ const ResponsiveAppBar = () => {
                                     cookiePolicy={'single_host_origin'}
                                 />
 
-                                <Button onClick={callInfoAPI} variant="contained">Get info</Button>
+                                <Button onClick={callInfoAPI} variant="contained">Get Profile</Button>
                             </>
 
                         }
