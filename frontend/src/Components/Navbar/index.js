@@ -11,7 +11,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import FacebookLogin from 'react-facebook-login';
+import GoogleLogin from 'react-google-login';
 import axios from 'axios';
 
 
@@ -39,32 +39,38 @@ const ResponsiveAppBar = () => {
         setAnchorElUser(null);
     };
 
-    axios.interceptors.request.use(function(config){
+    axios.interceptors.request.use(function (config) {
         const token = sessionStorage.getItem('access_token')
-        if(token)
-          config.headers['Authorization'] = `Bearer ${token}`
+        if (token)
+            config.headers['Authorization'] = `Bearer ${token}`
         return config
-      }, function(err){
+    }, function (err) {
         return Promise.reject(err)
-      })
-    
-      const callInfoAPI = async () => {
+    })
+
+    const callInfoAPI = async () => {
         let result = await axios.get('http://localhost:8080/api/info')
         console.log(result.data)
-      }
-       
-    const responseFacebook = async (response) => {
-        if(response.accessToken){
-          console.log('log in with accessToken=' + response.accessToken);
-          let result = await axios.post('http://localhost:8080/api/login', {
-            token: response.accessToken
-          })
-          console.log(result.data)
-          sessionStorage.setItem('acess_token', result.data.access_token)
-        }
-        
-      }
-      
+    }
+
+    const responseGoogle = (response) => {
+        console.log(response)
+        // if(response.access_token) {
+        //     console.log('login with access_token' + response.accessToken);
+
+        //     let result = await axios.post('http://localhost:8080/api/login', {
+        //       token: response.accessToken
+        //     })
+
+        //     console.log(result.data);
+        //     sessionStorage.setItem('access_token', result.data.accessToken)
+
+        //   }
+
+
+    }
+
+
     return (
         <AppBar position="static">
             <Container maxWidth="xl">
@@ -167,11 +173,12 @@ const ResponsiveAppBar = () => {
                             </>
                             :
                             <>
-                                <FacebookLogin
-                                    appId="468718444941464"
-                                    autoLoad={true}
-                                    fields="name,email,picture"
-                                    callback={responseFacebook} 
+                                <GoogleLogin
+                                    clientId="750038332989-5j4trdigj503v8fksq85aq6p20qklm2o.apps.googleusercontent.com"
+                                    buttonText="Login"
+                                    onSuccess={responseGoogle}
+                                    onFailure={responseGoogle}
+                                    cookiePolicy={'single_host_origin'}
                                 />
 
                                 <Button onClick={callInfoAPI} variant="contained">Get info</Button>
