@@ -26,6 +26,13 @@ app.post('/api/login_with_google', bodyParser.json(), async (req, res) => {
         audience: process.env.CLIENT_ID
     });
     const { name, email, picture } = ticket.getPayload(); 
+    connection.query(
+        `INSERT INTO TABLE (Email) VALUES(${email}) ON DUPLICATE KEY UPDATE Email = ${email}`,
+        function(err, results, fields) {
+          console.log(results); // results contains rows returned by server
+          console.log(fields); // fields contains extra meta data about results, if available
+        }
+    );
     // const user = await db.user.upsert({ 
     //     where: { email: email },
     //     update: { name, picture },
