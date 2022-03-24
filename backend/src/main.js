@@ -2,33 +2,44 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const axios = require('axios')
-const jwt = require('jsonwebtoken')
 const app = express()
 const port = 8080
-
-const TOKEN_RECRET = '12c417aed054d2e9134c546472a984384d117a462e50b7c357aee1da52e461c2511f2e4af190c8112576d303a822b9540b88282f22d2573698f893efe2758c7f'
-
-const authenticated = async (req, res, next) => {
-    const auth_header = req.headers['authorization']
-    const token = auth_header && auth_header.split(' ')[1]
-    if(!token)
-        return res.sendStatus(401)
-    jwt.verify(token, TOKEN_RECRET, (err, info) => {
-        if(err) return res.sendStatus(403)
-        req.username = info.username
-        next()
-    })
-    
-}
-
+const { OAuth2Client } = require('google-auth-library')
+const client = new OAuth2Client(process.env.CLIENT_ID)
+const mysql = require('mysql2');
+// const mongodb = require('mongodb');
 app.use(cors())
 
-app.get('/api/info_google', authenticated, (req, res) => {
-    res.send({ok: 1, username: req.username})
-})
-
-app.post('/api/login_with_goole', bodyParser.json(), async (req, res) => {
+// create the connection to database
+const connection = mysql.createConnection({
+    host: '127.0.0.1',
+    user: 'demons',
+    password: 'Mon991912!',
+    database: 'dcw_db'
     
+});
+
+app.post('/api/login_with_google', bodyParser.json(), async (req, res) => {
+    let token = req.body.token
+    const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: process.env.CLIENT_ID
+    });
+    const { name, email, picture } = ticket.getPayload(); 
+    // const user = await db.user.upsert({ 
+    //     where: { email: email },
+    //     update: { name, picture },
+    //     create: { name, email, picture }
+    // })
+    // const user = {
+    //     name: name,
+    //     email: email,
+    //     picture: picture
+    // }
+    // console.log(user.id)
+
+    res.send(user)
+
 })
 
 app.listen(port, () => {
