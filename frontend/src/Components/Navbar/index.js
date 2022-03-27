@@ -17,12 +17,12 @@ import axios from 'axios';
 
 
 const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Logout'];
 
 const ResponsiveAppBar = () => {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
-    const [login, setLogin] = React.useState(false);
+    const [authenticated, setAuthenticated] = React.useState(false);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -65,6 +65,8 @@ const ResponsiveAppBar = () => {
 
             const data = result.data;
             sessionStorage.setItem('access_token', data.access_token)
+            localStorage.setItem('authentication', true)
+            setAuthenticated(true)
             console.log(data);
             
           }
@@ -72,6 +74,17 @@ const ResponsiveAppBar = () => {
 
     }
 
+    const logout = () => {
+        localStorage.removeItem('authentication')
+        setAuthenticated(false)
+    }
+
+    React.useEffect(() => {
+        if(localStorage.getItem('authentication')){
+            setAuthenticated(true)
+        }
+    }, [authenticated])
+    
     
 
 
@@ -145,7 +158,7 @@ const ResponsiveAppBar = () => {
                     </Box>
 
                     <Box sx={{ flexGrow: 0 }}>
-                        {login ?
+                        {authenticated ?
                             <>
                                 <Tooltip title="Open settings">
                                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -170,10 +183,18 @@ const ResponsiveAppBar = () => {
                                 >
                                     {settings.map((setting) => (
                                         <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                            <Typography textAlign="center">{setting}</Typography>
+                                            <Typography textAlign="center" onClick={() => {
+                                                if(setting === 'Profile'){
+                                                    callInfoAPI()
+                                                }else if(setting === 'Logout') {
+                                                    logout()
+                                                }
+                                            }}>{setting}</Typography>
                                         </MenuItem>
                                     ))}
+                                    
                                 </Menu>
+
                             </>
                             :
                             <>
@@ -186,7 +207,7 @@ const ResponsiveAppBar = () => {
                                     
                                 />
 
-                                <Button onClick={callInfoAPI} variant="contained">Get Profile</Button>
+                                
                             </>
 
                         }
