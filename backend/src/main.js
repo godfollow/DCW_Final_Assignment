@@ -91,9 +91,9 @@ app.post('/api/login_with_google', bodyParser.json(), async (req, res) => {
         email: email,
         picture: picture
     }
-    const access_token = jwt.sign(user, TOKEN_SECRET, {expiresIn: '1800s'})
-    
-    res.send({access_token, user})
+    const access_token = jwt.sign(user, TOKEN_SECRET, {expiresIn: '20s'})
+    const refresh_token = jwt.sign(user, TOKEN_SECRET, { expiresIn: '36000s'})
+    res.send({access_token, refresh_token, user})
 
 })
 
@@ -102,7 +102,10 @@ app.get('/api/info', authenticated, (req, res) => {
 })
 
 
-
+// app.post('/api/get_token', bodyParser.json(), (req, res) => {
+//     const refresh_token = req.body.refresh_token
+//     console.log(refresh_token)
+// })
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`)

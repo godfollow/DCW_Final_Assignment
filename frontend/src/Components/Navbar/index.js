@@ -65,6 +65,7 @@ const ResponsiveAppBar = () => {
 
             const data = result.data;
             sessionStorage.setItem('access_token', data.access_token)
+            sessionStorage.setItem('refresh_token', data.refresh_token)
             localStorage.setItem('authentication', true)
             setAuthenticated(true)
             console.log(data);
@@ -78,6 +79,13 @@ const ResponsiveAppBar = () => {
         localStorage.removeItem('authentication')
         setAuthenticated(false)
     }
+
+
+    // const getNewToken = async (response) => { 
+    //     let result = await axios.post('http://localhost:8080/api/get_token', {  
+    //             refresh_token: sessionStorage.getItem('refresh_token')
+    //         })
+    // }
 
     React.useEffect(() => {
         if(localStorage.getItem('authentication')){
@@ -194,6 +202,7 @@ const ResponsiveAppBar = () => {
                                     ))}
                                     
                                 </Menu>
+                                {/* <button onClick={getNewToken}>New access_token</button> */}
 
                             </>
                             :
