@@ -64,12 +64,15 @@ const ResponsiveAppBar = () => {
         
 
             const data = result.data;
+            sessionStorage.setItem('access_token', data.access_token)
             console.log(data);
             
           }
 
 
     }
+
+    
 
 
     return (
