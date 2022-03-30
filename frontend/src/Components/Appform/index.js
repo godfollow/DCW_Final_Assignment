@@ -15,6 +15,9 @@ import OutlinedInput from '@mui/material/OutlinedInput';
       setName(event.target.value);
     };*/
 
+// https://mui.com/components/text-fields/#components
+// https://mui.com/components/textarea-autosize/#empty
+
 const index = () => {
     return (
         <>
@@ -71,7 +74,12 @@ const index = () => {
                     <FilledInput id="component-filled" value={name} onChange={handleChange} />
                 </FormControl>
             </Box>
-        
+            
+            <TextareaAutosize
+                aria-label="empty textarea"
+                placeholder="Empty"
+                style={{ width: 800 }}
+            />
         
         
         </>
