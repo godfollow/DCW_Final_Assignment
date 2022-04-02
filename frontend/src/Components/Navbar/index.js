@@ -16,14 +16,16 @@ import axios from 'axios';
 
 
 
-const pages = ['Products', 'Pricing', 'Blog'];
+// const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Logout'];
 
 const ResponsiveAppBar = () => {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const [authenticated, setAuthenticated] = React.useState(false);
-
+    const [profile, setProfile] = React.useState({'name': '', 
+                                                  'email': '',
+                                                  'picture': ''});
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };
@@ -48,9 +50,8 @@ const ResponsiveAppBar = () => {
         return Promise.reject(err)
     })
 
-    const callInfoAPI = async () => {
-        let result = await axios.get('http://localhost:8080/api/info')
-        console.log(result.data)
+    const getUserProfile = async () => {
+        console.log(profile)
     }
 
     const responseGoogle = async (response) => {
@@ -94,8 +95,20 @@ const ResponsiveAppBar = () => {
     }, [authenticated])
     
     
+   React.useEffect(() => {
+        async function fetchDataProfile(){
+            let result = await axios.get('http://localhost:8080/api/info')
+            setProfile({
+                'name': `${result.data.user.name}`, 
+                'email': `${result.data.user.email}`,
+                'picture': `${result.data.user.picture}`
+            })
+        }
+        fetchDataProfile()
+   }, [])
 
 
+    
     return (
         <AppBar position="static">
             <Container maxWidth="xl">
@@ -138,11 +151,11 @@ const ResponsiveAppBar = () => {
                                 display: { xs: 'block', md: 'none' },
                             }}
                         >
-                            {pages.map((page) => (
+                            {/* {pages.map((page) => (
                                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                                     <Typography textAlign="center">{page}</Typography>
                                 </MenuItem>
-                            ))}
+                            ))} */}
                         </Menu>
                     </Box>
                     <Typography
@@ -151,7 +164,7 @@ const ResponsiveAppBar = () => {
                         component="div"
                         sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
                     >
-                        LOGO
+                        DCW
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {/* {pages.map((page) => (
@@ -170,7 +183,7 @@ const ResponsiveAppBar = () => {
                             <>
                                 <Tooltip title="Open settings">
                                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                        <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                                        <Avatar alt="Remy Sharp" src={profile.picture} />
                                     </IconButton>
                                 </Tooltip>
                                 <Menu
@@ -193,7 +206,7 @@ const ResponsiveAppBar = () => {
                                         <MenuItem key={setting} onClick={handleCloseUserMenu}>
                                             <Typography textAlign="center" onClick={() => {
                                                 if(setting === 'Profile'){
-                                                    callInfoAPI()
+                                                    getUserProfile()
                                                 }else if(setting === 'Logout') {
                                                     logout()
                                                 }
@@ -203,6 +216,8 @@ const ResponsiveAppBar = () => {
                                     
                                 </Menu>
                                 {/* <button onClick={getNewToken}>New access_token</button> */}
+                                
+                                
 
                             </>
                             :

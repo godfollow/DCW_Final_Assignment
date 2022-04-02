@@ -1,11 +1,11 @@
 import Navbar from './Components/Navbar'
-import Appform from './Components/Appform'
+import Blogpost from './Components/Blogpost'
 
 function App() {
   return (
     <>
      <Navbar /> 
-     <Appform />
+     <Blogpost />
     </>
   );
 }
