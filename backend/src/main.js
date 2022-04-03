@@ -8,12 +8,12 @@ const port = 8000
 const { OAuth2Client } = require('google-auth-library')
 const client = new OAuth2Client(process.env.CLIENT_ID)
 const mysql = require('mysql2');
-// const mongodb = require('mongodb');
+const logger = require('./logger');
 app.use(cors())
 
 
 
-//config cloudinary
+
 
 
 
@@ -96,7 +96,7 @@ app.post('/api/blog-post', bodyParser.json({ limit: '1000mb' }), async (req, res
     connection.query(
         `INSERT INTO Blogs(Title, Content, PictureCover) VALUES ('${title}', '${content}', '${pictureCover}')`,
         function (err, result, fields) {
-            
+            logger.info(`blog has been post`)
         }
     )
 })
