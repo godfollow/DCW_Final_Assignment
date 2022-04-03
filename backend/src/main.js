@@ -12,19 +12,27 @@ const mysql = require('mysql2');
 app.use(cors())
 
 
+
+//config cloudinary
+
+
+
+
+
+
 const TOKEN_SECRET = 'b4b30dc316d49151c522a8aef459292791c17d8314ce9f8e0e523df6caa4ed606fdd18292bad9448e317fc6b2cba046f4520d744c24b1cdf096f72b059dcd2c8'
 
 const authenticated = (req, res, next) => {
     const auth_header = req.headers['authorization']
     const token = auth_header && auth_header.split(' ')[1]
-    if(!token) 
+    if (!token)
         return res.sendStatus(401)
     jwt.verify(token, TOKEN_SECRET, (err, info) => {
-        if(err) return res.sendStatus(403)
+        if (err) return res.sendStatus(403)
         req.user = info
         next()
     })
-   
+
 }
 
 
@@ -33,16 +41,16 @@ const insertOrUpdateDB = (email, name, picture) => {
     connection.query(
         `SELECT * FROM Users WHERE Email = '${email}'`,
         function (err, results, fields) {
-            if(results[0]) {  //update data to db
+            if (results[0]) {  //update data to db
                 id = results[0]['Id'];
                 connection.query(
                     `UPDATE Users SET Name='${name}', Picture='${picture}' WHERE Id=${id}`,
                     function (err, result, fields) {
-                        
+
                     }
                 )
                 // console.log(id)
-            }else if(!results[0]) { // insert data to db
+            } else if (!results[0]) { // insert data to db
                 connection.query(
                     `INSERT INTO Users(Email, Name, Picture) VALUES ('${email}', '${name}', '${picture}')`,
                     function (err, result, fields) {
@@ -51,29 +59,56 @@ const insertOrUpdateDB = (email, name, picture) => {
                     }
                 )
             }
-            
+
         }
     );
-    
+
 }
 
 // create the connection to database
 const connection = mysql.createConnection({
     host: '127.0.0.1',
     user: 'admin',
-    password: 'Admin1212',
+    password: 'Admin1267!',
     database: 'dcw_db'
-    
+
 });
-//create table to db when start server if table doesn't exists
+//create user table to db when start server if table doesn't exists
 connection.query(
     'CREATE TABLE IF NOT EXISTS Users (Id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Email VARCHAR(255) NOT NULL, Name VARCHAR(255), Picture VARCHAR(2000))',
-    function(err, results, fields) {
-      console.log(results); // results contains rows returned by server
-      console.log(fields); // fields contains extra meta data about results, if available
+    function (err, results, fields) {
+        console.log(results); // results contains rows returned by server
+        console.log(fields); // fields contains extra meta data about results, if available
+    }
+);
+//create blog table
+connection.query(
+    'CREATE TABLE IF NOT EXISTS Blogs (Id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Title VARCHAR(255), Content LONGTEXT, PictureCover LONGTEXT)',
+    function (err, results, fields) {
+        console.log(results); // results contains rows returned by server
+        console.log(fields); // fields contains extra meta data about results, if available
     }
 );
 
+
+app.post('/api/blog-post', bodyParser.json({ limit: '1000mb' }), async (req, res) => {
+    const {title, content, pictureCover} = req.body
+    connection.query(
+        `INSERT INTO Blogs(Title, Content, PictureCover) VALUES ('${title}', '${content}', '${pictureCover}')`,
+        function (err, result, fields) {
+            
+        }
+    )
+})
+
+app.get('/api/blog-list', (req, res) => {
+    connection.query('SELECT * FROM Blogs',
+        function (err, result, fields) {
+            res.send(result)
+        }
+    )
+    
+})
 
 
 app.post('/api/login_with_google', bodyParser.json(), async (req, res) => {
@@ -82,8 +117,8 @@ app.post('/api/login_with_google', bodyParser.json(), async (req, res) => {
         idToken: token,
         audience: process.env.CLIENT_ID
     });
-    const { name, email, picture } = ticket.getPayload(); 
-    
+    const { name, email, picture } = ticket.getPayload();
+
     insertOrUpdateDB(email, name, picture);
 
     const user = {
@@ -91,14 +126,14 @@ app.post('/api/login_with_google', bodyParser.json(), async (req, res) => {
         email: email,
         picture: picture
     }
-    const access_token = jwt.sign(user, TOKEN_SECRET, {expiresIn: '20s'})
-    const refresh_token = jwt.sign(user, TOKEN_SECRET, { expiresIn: '36000s'})
-    res.send({access_token, refresh_token, user})
+    const access_token = jwt.sign(user, TOKEN_SECRET, { expiresIn: '36000s' })
+    const refresh_token = jwt.sign(user, TOKEN_SECRET, { expiresIn: '36000s' })
+    res.send({ access_token, refresh_token, user })
 
 })
 
 app.get('/api/info', authenticated, (req, res) => {
-    res.send({ok: 1, user: req.user})
+    res.send({ ok: 1, user: req.user })
 })
 
 
@@ -108,5 +143,5 @@ app.get('/api/info', authenticated, (req, res) => {
 // })
 
 app.listen(port, () => {
-  console.log(`Server listening on port ${port}`)
+    console.log(`Server listening on port ${port}`)
 })
