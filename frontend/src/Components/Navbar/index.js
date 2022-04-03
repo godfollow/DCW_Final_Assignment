@@ -13,7 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import GoogleLogin from 'react-google-login';
 import axios from 'axios';
-
+import config from '../../config';
 
 
 // const pages = ['Products', 'Pricing', 'Blog'];
@@ -56,7 +56,7 @@ const ResponsiveAppBar = () => {
 
     const responseGoogle = async (response) => {
         if(response.accessToken) {
-            let result = await axios.post('http://localhost:8080/api/login_with_google', {
+            let result = await axios.post(`${config.apiUrlPrefix}/login_with_google`, {
               token: response.tokenId
             })
 
@@ -97,7 +97,7 @@ const ResponsiveAppBar = () => {
     
    React.useEffect(() => {
         async function fetchDataProfile(){
-            let result = await axios.get('http://localhost:8080/api/info')
+            let result = await axios.get(`${config.apiUrlPrefix}/info`)
             setProfile({
                 'name': `${result.data.user.name}`, 
                 'email': `${result.data.user.email}`,

@@ -17,7 +17,7 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import axios from 'axios';
-
+import config from '../../config';
 
 const Index = (props) => {
 
@@ -50,7 +50,7 @@ const Index = (props) => {
     }
 
     const handleUploadBlog = (e) => {
-        axios.post('http://localhost:8080/api/blog-post', {
+        axios.post(`${config.apiUrlPrefix}/blog-post`, {
             title: title,
             content: content,
             pictureCover: coverPreviewUrl
@@ -62,7 +62,7 @@ const Index = (props) => {
     }
 
     const getAllBlog = async (e) => {
-        const result = await axios.get('http://localhost:8080/api/blog-list')
+        const result = await axios.get(`${config.apiUrlPrefix}/blog-list`)
         setBlogList(result.data)
         
         
