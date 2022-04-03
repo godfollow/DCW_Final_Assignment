@@ -14,4 +14,5 @@ services:
       - MYSQL_DATABASE=dcw_db
       - MYSQL_USER=admin
       - MYSQL_PASSWORD=Admin1267!
+      - MYSQL_ROOT_PASSWORD=Admin1267!
     
