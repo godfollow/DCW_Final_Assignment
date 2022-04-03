@@ -68,7 +68,7 @@ const insertOrUpdateDB = (email, name, picture) => {
 // create the connection to database
 const connection = mysql.createConnection({
     host: '127.0.0.1',
-    user: 'admin',
+    user: 'root',
     password: 'Admin1267!',
     database: 'dcw_db'
 
