@@ -5,16 +5,16 @@ services:
     build: . 
     ports: 
       - 127.0.0.1:8000:8000 
-    depends_on:
-      - mysql_server
+    # depends_on:
+    #   - mysql_server
     
-  mysql_server:
-    image: mysql:latest 
-    environment:
-      - MYSQL_DATABASE=dcw_db
-      - MYSQL_USER=admin
-      - MYSQL_PASSWORD=Admin1267!
-      - MYSQL_ROOT_PASSWORD=Admin1267!
-    ports:
-      - 127.0.0.1:3306:3306
+  # mysql_server:
+  #   image: mysql:latest 
+  #   environment:
+  #     - MYSQL_DATABASE=dcw_db
+  #     - MYSQL_USER=admin
+  #     - MYSQL_PASSWORD=Admin1267!
+  #     - MYSQL_ROOT_PASSWORD=Admin1267!
+  #   ports:
+  #     - 127.0.0.1:3306:3306
     
