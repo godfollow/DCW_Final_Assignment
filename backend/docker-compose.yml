@@ -16,5 +16,5 @@ services:
       - MYSQL_PASSWORD=Admin1267!
       - MYSQL_ROOT_PASSWORD=Admin1267!
     ports:
-      - 3306:3306
+      - 127.0.0.1:3306:3306
     
