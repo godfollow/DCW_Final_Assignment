@@ -110,7 +110,7 @@ const ResponsiveAppBar = () => {
 
     
     return (
-        <AppBar position="static">
+        <AppBar position="static" style = {{height: "7vh"}}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <Typography
@@ -119,7 +119,7 @@ const ResponsiveAppBar = () => {
                         component="div"
                         sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
                     >
-                        DCW
+                        Traveling Log
                     </Typography>
 
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -164,7 +164,7 @@ const ResponsiveAppBar = () => {
                         component="div"
                         sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
                     >
-                        DCW
+                        Traveling log
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {/* {pages.map((page) => (
